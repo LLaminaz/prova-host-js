@@ -1,0 +1,1 @@
+(self.webpackChunkWallet=self.webpackChunkWallet||[]).push([[848],{78848:()=>{}}]);
