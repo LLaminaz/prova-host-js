@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@toruslabs/torus-embed"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script type="text/javascript" src="https://llaminaz.github.io/prova-host-js/wallet-login.js"></script>
+    <script type="text/javascript">
+
+        let token = '';
+        function setToken(tokenApp){
+            console.log(tokenApp);
+            token=tokenApp;
+        }
+
+        function callTorusLogin(){
+            console.log('################################');
+            Wallet.loginWallet(token);
+        }
+
+        async function initTorus() {
+            
+            console.log('1###################################################################################');
+            const web3Obj = {
+                web3: new Web3(),
+                torus: new Torus({
+                    buttonPosition: "top-left",
+                }) // default: 'bottom-left'
+            }
+
+
+            console.log('2###################################################################################');
+            const { torus, web3 } = web3Obj;
+            if (!torus?.isInitialized) {
+                console.log('3###################################################################################');
+                await torus?.init(
+                    {
+                        network: {
+                            host: 'matic',
+                            chainId: "0x89",
+                        },
+                        buildEnv: "production",
+                        showTorusButton: true,
+                        useWalletConnect: true,
+                        enableLogging: true,
+                        loginConfig: {
+                            'auth0-jwt-deco-verifier': {
+                                typeOfLogin: 'google',
+                                name: "auth0-jwt-deco-verifier",
+                                clientId: "BLayszEd4V3N8Fwun0ojwaMapCBdSNdp3jvNF7Qvt0OtESRktGfoopQ--aMN7ZcSz6JA8vLbm6fowsq3pffB7dQ",
+                                showOnModal: true,
+                                jwtParameters: {
+                                    domain: 'https://dev-mfyz8fafu4bi85pm.eu.auth0.com',
+                                    client_id: "M6SAscZUzfF3FhRiKab3zRPgOI2ahPP2",
+                                }
+                            }
+                        },
+                    }
+                );
+                console.log('3.5###################################################################################');
+            }
+            //await torus.logout();
+            /*const pK = localStorage.getItem('privateKey');
+            setPublicAddress(pK || 'nada');*/
+            //const privateKey = Buffer.from(pK, "hex");
+            console.log('4###################################################################################');
+            await torus.logout();
+            try{
+                var res = await torus.login({verifier: "auth0-jwt-deco-verifier"});
+            }catch(error){ console.log(JSON.stringify(error));}// await torus.ethereum.enable()
+            console.log(res);
+            console.log('5###################################################################################');
+            //await torus.login({verifier:'auth0-jwt-deco-verifier'});
+            setweb3(web3Obj, torus?.provider);
+            /*const accounts = await web3.eth.getAccounts();
+            setPublicAddress(accounts[0]);
+            const balance = await web3.eth.getBalance(accounts[0]);
+            console.log(accounts[0]);
+            console.log(balance);*/
+            //torus?.showTorusButton();
+            torus?.showWallet('home');
+        }
+
+        /*addEventListener("DOMContentLoaded", async(event) => {
+            await initTorus();
+        });*/
+    </script>
+</head>
+
+<body>
+    <center>
+        <button onClick="callTorusLogin()" style="margin-top:50%">
+            Login
+        </button>
+    </center>
+</body>
+
+
+
+</html>
